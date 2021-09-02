@@ -29,7 +29,7 @@ class profile:
             }
         }
     #WORK
-    def rank(self, type): # type: 'Ranked Solo, Flex 5:5 Rank
+    def rank(self, type): 
         #Clicks on Ranked Solo 
         nav = self.source.find_element_by_class_name("Navigation")
         
@@ -63,9 +63,21 @@ class profile:
 
         i = 0
         for userName in people:
+            
+            # a = self.source.find_elements_by_class_name("LastUpdate")
+            # updatebutton = self.source.find_elements_by_id("SummonerRefreshButton")[0]
+            # ActionChains(self.source).click(updatebutton).perform()
+            # WebDriverWait(self.source, 10).until(
+            #     lambda wd: a != self.source.find_elements_by_class_name("LastUpdate")[0].text
+            # )   
+            
+            
             self.source.get('https://na.op.gg/summoner/champions/userName=' + userName)
-            print(self.source.current_url)
+            #print(self.source.current_url)
             currChamp = champions[i]
+            if (currChamp.find("'")):
+                currChamp= currChamp.replace("'", "', \"'\", '")
+                currChamp= "concat('" + item_text+ "')"
             tempNode = self.source.find_element_by_xpath("//td[@data-value = '"+ currChamp +"']")
             print(tempNode.find_element_by_xpath(".//*").text)
             i = i + 1
@@ -82,7 +94,7 @@ class profile:
 
 
     # bar above match stats
-    def queue_stats(self, game_type='Total'): # type: 'Ranked Solo, Ranked Flex
+    def queue_stats(self, game_type='Total'): 
         # click correct game_type if specified
         if game_type != 'Total': 
             nav = self.source.find_element_by_class_name("Navigation")
