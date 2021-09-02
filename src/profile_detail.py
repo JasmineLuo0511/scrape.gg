@@ -3,6 +3,9 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
+import os
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver import ActionChains
 from utility import *
 
 class profile:
@@ -41,7 +44,8 @@ class profile:
         #Finds all teammate names and champions played for past 20 ranked solo/duo games 
         people = []
         champions = []
-        for team in self.source.find_elements_by_xpath("//div[@class='Team']//div[@class='Summoner Requester']"):
+        teams = self.source.find_elements_by_xpath("//div[@class='Team']//div[@class='Summoner Requester']")
+        for team in teams:
             #temp = man.find_elements_by_class_name('SummonerName')
             parent = team.find_element_by_xpath('..')
             temp = parent.find_elements_by_class_name('SummonerName')
@@ -57,35 +61,15 @@ class profile:
         
                 
 
-        # i = 0
-        # for userNames in people:
-            
-        #     driverpath = '/usr/local/bin/chromedriver'
-        #     chrome_options = Options()  
-        #     chrome_options.add_argument("--headless")  
-        #     tempDriver = webdriver.Chrome(driverpath, options=chrome_options)
-        #     tempDriver.get('https://na.op.gg/summoner/champions/userName=' + userNames)
-        #     currChamp = champions.index(i)
-
-        #     tempDriver.find_element_by_xpath("//td[@data-value = "+ currChamp +"]").text
-        #     i = i + 1
-
-            driverpath = '/usr/local/bin/chromedriver'
-            chrome_options = Options()  
-            chrome_options.add_argument("--headless")  
-            tempDriver = webdriver.Chrome(driverpath, options=chrome_options)
-            tempDriver.get('https://na.op.gg/summoner/champions/userName=' + people.index(0))
-            currChamp = champions.index(0)
-
-            tempNode = tempDriver.find_element_by_xpath("//td[@data-value = "+ currChamp +"]")
+        i = 0
+        for userName in people:
+            self.source.get('https://na.op.gg/summoner/champions/userName=' + userName)
+            print(self.source.current_url)
+            currChamp = champions[i]
+            tempNode = self.source.find_element_by_xpath("//td[@data-value = '"+ currChamp +"']")
             print(tempNode.find_element_by_xpath(".//*").text)
+            i = i + 1
 
-
-
-        
-            
-        
-        
 
 
         return {
