@@ -11,7 +11,7 @@ from match_detail import match
 import json # for testing
 
 driver = 0
-summonerName = 'CHIKAlNAl'
+summonerName = 'jaz0511'
 queryMode = 'Total' # 'Ranked Solo', 'Ranked Flex'/'Ranked Flex 5v5'
 summonerData = {}
 
@@ -23,6 +23,8 @@ def initDriver():
 
     driver = webdriver.Chrome(driverpath, options=chrome_options)
     driver.get('https://na.op.gg/summoner/userName=' + summonerName)
+    #driver.get('https://na.op.gg/summoner/champions/userName=' + summonerName)
+
 
     return driver
 

@@ -25,8 +25,69 @@ class profile:
                 'cs_per_minute': 30
             }
         }
-
+    #WORK
     def rank(self, type): # type: 'Ranked Solo, Flex 5:5 Rank
+        #Clicks on Ranked Solo 
+        nav = self.source.find_element_by_class_name("Navigation")
+        
+        link = nav.find_element_by_id('right_gametype_soloranked')
+        link.click()
+        
+        WebDriverWait(self.source, 10).until(
+            EC.presence_of_element_located((
+            By.CLASS_NAME, "GameAverageStats")))
+
+     
+        #Finds all teammate names and champions played for past 20 ranked solo/duo games 
+        people = []
+        champions = []
+        for team in self.source.find_elements_by_xpath("//div[@class='Team']//div[@class='Summoner Requester']"):
+            #temp = man.find_elements_by_class_name('SummonerName')
+            parent = team.find_element_by_xpath('..')
+            temp = parent.find_elements_by_class_name('SummonerName')
+            temp2 = parent.find_elements_by_class_name("ChampionImage")  
+            for inner in temp:
+                user = inner.text
+                people.append(user)
+            for champ in temp2:
+                champName = champ.find_element_by_xpath(".//*").get_attribute("title")
+                champions.append(champName) 
+        
+
+        
+                
+
+        # i = 0
+        # for userNames in people:
+            
+        #     driverpath = '/usr/local/bin/chromedriver'
+        #     chrome_options = Options()  
+        #     chrome_options.add_argument("--headless")  
+        #     tempDriver = webdriver.Chrome(driverpath, options=chrome_options)
+        #     tempDriver.get('https://na.op.gg/summoner/champions/userName=' + userNames)
+        #     currChamp = champions.index(i)
+
+        #     tempDriver.find_element_by_xpath("//td[@data-value = "+ currChamp +"]").text
+        #     i = i + 1
+
+            driverpath = '/usr/local/bin/chromedriver'
+            chrome_options = Options()  
+            chrome_options.add_argument("--headless")  
+            tempDriver = webdriver.Chrome(driverpath, options=chrome_options)
+            tempDriver.get('https://na.op.gg/summoner/champions/userName=' + people.index(0))
+            currChamp = champions.index(0)
+
+            tempNode = tempDriver.find_element_by_xpath("//td[@data-value = "+ currChamp +"]")
+            print(tempNode.find_element_by_xpath(".//*").text)
+
+
+
+        
+            
+        
+        
+
+
         return {
             'type': 'Ranked Solo',
             'lp': 61,
@@ -34,6 +95,7 @@ class profile:
             'win_count': 92,
             'loss_count': 68,
         }
+
 
     # bar above match stats
     def queue_stats(self, game_type='Total'): # type: 'Ranked Solo, Ranked Flex

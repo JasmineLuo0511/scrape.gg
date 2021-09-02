@@ -1,5 +1,5 @@
-from scrapeGG import scrapeGG
-init = scrapeGG('API')
+from scrapegg import scrapeGG
+init = scrapeGG('luckypants177')
 
 import json # for testing
 
