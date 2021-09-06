@@ -2,6 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.common.alert import Alert
 
 import os
 from selenium.webdriver.chrome.options import Options
@@ -10,7 +11,7 @@ from utility import *
 
 class profile:
     def __init__(self, source):
-        self.source = source
+        self.source = source #this is the web driver instance
 
     def top_played_champions(self):
         return {
@@ -56,32 +57,53 @@ class profile:
             for champ in temp2:
                 champName = champ.find_element_by_xpath(".//*").get_attribute("title")
                 champions.append(champName) 
+              #  print(champName)
         
 
         
                 
 
         i = 0
-        for userName in people:
-            
-            # a = self.source.find_elements_by_class_name("LastUpdate")
-            # updatebutton = self.source.find_elements_by_id("SummonerRefreshButton")[0]
-            # ActionChains(self.source).click(updatebutton).perform()
-            # WebDriverWait(self.source, 10).until(
-            #     lambda wd: a != self.source.find_elements_by_class_name("LastUpdate")[0].text
-            # )   
-            
-            
-            self.source.get('https://na.op.gg/summoner/champions/userName=' + userName)
-            #print(self.source.current_url)
-            currChamp = champions[i]
-            if (currChamp.find("'")):
-                currChamp= currChamp.replace("'", "', \"'\", '")
-                currChamp= "concat('" + item_text+ "')"
-            tempNode = self.source.find_element_by_xpath("//td[@data-value = '"+ currChamp +"']")
-            print(tempNode.find_element_by_xpath(".//*").text)
-            i = i + 1
 
+        for userName in people:
+            try:
+                self.source.get('https://na.op.gg/summoner/champions/userName=' + userName)
+                a = self.source.find_elements_by_class_name("LastUpdate")
+                updatebutton = self.source.find_elements_by_id("SummonerRefreshButton")[0]
+                updatebutton.click()
+              #  ActionChains(self.source).click(updatebutton).perform()
+                WebDriverWait(self.source, 10).until(
+                    lambda wd: a != self.source.find_elements_by_class_name("LastUpdate")[0].text
+                )
+                self.source.get('https://na.op.gg/summoner/champions/userName=' + userName)
+                #print(self.source.current_url)
+                print("place 1")
+                currChamp = champions[i]
+                # if (currChamp.find("'")):
+                #     currChamp= currChamp.replace("'", "\\'")
+                #     #currChamp= "concat('" + currChamp+ "')"
+                print("place 2")
+                tempNode = self.source.find_element_by_xpath("""//td[@data-value = """+'"'+ currChamp+'"' +"]")
+                print("place 3")
+                print(tempNode.find_element_by_xpath(".//*").text)
+                
+ 
+            except Exception as e:
+    
+                #dismissing the alert
+                print("alert!!!!!!")
+                print(e)
+                try:
+                    alert = Alert(self.source)
+                    alert.dismiss()
+                    
+                except: #if no alert detected
+                    pass
+            
+            i = i + 1
+                
+                   
+            
 
 
         return {
